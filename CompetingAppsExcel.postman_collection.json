@@ -1,0 +1,67 @@
+{
+	"owner": 0,
+	"lastUpdatedBy": "2403493",
+	"lastRevision": 2933980653,
+	"team": null,
+	"id": "f494feab-7af2-9f78-f2f3-92785705c944",
+	"name": "CompetingAppsExcel",
+	"description": "",
+	"variables": [],
+	"auth": null,
+	"events": [],
+	"folders_order": [],
+	"order": [
+		"17ea2337-addc-8be4-a921-588e61658629"
+	],
+	"folders": [],
+	"hasRequests": true,
+	"requests": [
+		{
+			"id": "17ea2337-addc-8be4-a921-588e61658629",
+			"headers": "Authorization: Basic YXJvcmFtczpDbGludG9uQDEyMw==\n//URL: {{URL}}\nusername: {{username}}\npassword: {{password}}\n",
+			"headerData": [
+				{
+					"key": "Authorization",
+					"value": "Basic YXJvcmFtczpDbGludG9uQDEyMw==",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "URL",
+					"value": "{{URL}}",
+					"description": "",
+					"enabled": false
+				},
+				{
+					"key": "username",
+					"value": "{{username}}",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "password",
+					"value": "{{password}}",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "{{URL}}",
+			"folder": null,
+			"queryParams": [],
+			"preRequestScript": "//Set global variable for all columns in testdata\r\npostman.setGlobalVariable(\"URL\", data[\"URL\"]);\r\npostman.setGlobalVariable(\"VALID\", data[\"VALID\"]);\r\npostman.setGlobalVariable(\"INVALID\", data[\"INVALID\"]);\r\npostman.setGlobalVariable(\"TOCHECK\", data[\"TOCHECK\"]);\r\npostman.setGlobalVariable(\"WIDGET\", data[\"WIDGET\"]);\r\npostman.setGlobalVariable(\"COLUMN\", data[\"COLUMN\"]);\r\nconsole.log(\"URL that will be sent   \" + data[\"URL\"]);\r\nconsole.log(\"Column that will be sent    \" + data[\"Column\"]);\r\nconsole.log(\"VALID that will be sent   \" + data[\"VALID\"]);\r\nconsole.log(\"INVALID that will be sent   \" + data[\"INVALID\"]);\r\nconsole.log(\"TOCHECK that will be sent   \" + data[\"TOCHECK\"]);\r\nconsole.log(\"WIDGET that will be sent   \" + data[\"WIDGET\"]);\r\nconsole.log(\"COLUMN that will be sent   \" + data[\"COLUMN\"]);\r\n\r\n",
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"tests": "//To check filtering by String\nif ((data[\"TOCHECK\"] == \"FILTER\"  && data[\"TYPE\"] == \"STRING\"))\n{\ntests[\"Status code is 200\"] = responseCode.code === 200;\n// If Valid Scenario\ntests[\"POSITIVE + Body matches:\" +data[\"COLUMN\"] + \"=\"+ data[\"VALID\"]] = responseBody.has(data[\"VALID\"].trim());\n\n//Invalid Scenario\ntests[\"NEGATIVE + Body DOES NOT matches:\" +data[\"COLUMN\"] + \"=\"+ data[\"INVALID\"]] = !(responseBody.has(data[\"INVALID\"].trim()));\n}\n//To check filtering by Number\nelse if ((data[\"TOCHECK\"] == \"FILTER\") && (data[\"TYPE\"] == \"NUMBER\"))\n{\n    tests[\"Status code is 200\"] = responseCode.code === 200;\n// If Valid Scenario\ntests[\"POSITIVE + Body matches:\" +data[\"COLUMN\"] + \"=\"+ data[\"VALID\"]] = responseBody.has(data[\"VALID\"]);\n\n//Invalid Scenario\ntests[\"NEGATIVE + Body DOES NOT matches:\" +data[\"COLUMN\"] + \"=\"+ data[\"INVALID\"]] = !(responseBody.has(data[\"INVALID\"]));\n}\n//To check Sorting for String\nelse if ((data[\"TOCHECK\"] == \"SORT\") && (data[\"TYPE\"] == \"STRING\"))\n{\n    tests[\"Status code is 200\"] = responseCode.code === 200;\n//SORT\nvar jsonData = JSON.parse(responseBody);\n// Fetch properties in JSON response and get first one \nvar widgetName = Object.keys(jsonData)[0]; // There are 2 properties, so fetch first property with 0 index\nvar columnValueToCompare = data[\"COLUMN\"].trim();\n\n// Get project title which is first in the list : SORT ASC\nvar SortColumnFromResponse = jsonData[widgetName][0][columnValueToCompare];\n// Compare projecttitle from response with Value in Excel\ntests[\"SORT on : \" + columnValueToCompare + \", columnValue : \" + data[\"VALID\"].trim()] = SortColumnFromResponse == (data[\"VALID\"].trim());\n}\n\n//To check Sorting for Number\nelse if ((data[\"TOCHECK\"] == \"SORT\") && (data[\"TYPE\"] == \"NUMBER\"))\n{\n    tests[\"Status code is 200\"] = responseCode.code === 200;\n//SORT\nvar jsonData = JSON.parse(responseBody);\n// Fetch properties in JSON response and get first one \nvar widgetName = Object.keys(jsonData)[0]; // There are 2 properties, so fetch first property with 0 index\nvar columnValueToCompare = data[\"COLUMN\"];\n\n// Get project title which is first in the list : SORT ASC\nvar SortColumnFromResponse = jsonData[widgetName][0][columnValueToCompare];\n// Compare projecttitle from response with Value in Excel\ntests[\"SORT on : \" + columnValueToCompare + \", columnValue : \" + data[\"VALID\"]] = SortColumnFromResponse == (data[\"VALID\"]);\n}\n//To check miscalleanous\nelse if ((data[\"TOCHECK\"] == \"NA\"  && data[\"TYPE\"] == \"NA\"))\n{\ntests[\"MISCELLANEOUS TESTS\"] = responseCode.code === 200;\n}",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1516202875926,
+			"name": "CompetingApplsExcel",
+			"description": null,
+			"collectionId": "f494feab-7af2-9f78-f2f3-92785705c944",
+			"responses": []
+		}
+	]
+}
